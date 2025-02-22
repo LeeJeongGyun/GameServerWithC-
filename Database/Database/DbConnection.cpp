@@ -101,6 +101,124 @@ void DbConnection::UnBind()
     ::SQLFreeStmt(_statement, SQL_CLOSE);
 }
 
+bool DbConnection::BindParam(int paramIndex, bool *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_TINYINT, SQL_TINYINT, sizeof(bool), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, float *value, SQLLEN *index)
+{
+    // 정수가 아닐때는 size 0으로 밀어도 된다.
+    return BindParam(paramIndex, SQL_C_FLOAT, SQL_REAL, 0, value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, double *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_DOUBLE, SQL_DOUBLE, 0, value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, byte *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_TINYINT, SQL_TINYINT, sizeof(byte), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, short *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_SHORT, SQL_SMALLINT, sizeof(short), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, int *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_LONG, SQL_INTEGER, sizeof(short), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, LONGLONG *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_SBIGINT, SQL_BIGINT, sizeof(LONGLONG), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, TIMESTAMP_STRUCT *value, SQLLEN *index)
+{
+    return BindParam(paramIndex, SQL_C_TYPE_TIMESTAMP, SQL_TYPE_TIMESTAMP, sizeof(TIMESTAMP_STRUCT), value, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, const WCHAR *str, SQLLEN *index)
+{
+    SQLULEN size = static_cast<SQLULEN>((::wcslen(str) + 1) * 2);
+    *index = SQL_NTSL;
+
+    if (size > WVARCHAR_MAX)
+        return BindParam(paramIndex, SQL_C_WCHAR, SQL_WLONGVARCHAR, size, (SQLPOINTER)str, index);
+    else
+        return BindParam(paramIndex, SQL_C_WCHAR, SQL_WCHAR, size, (SQLPOINTER)str, index);
+}
+
+bool DbConnection::BindParam(int paramIndex, const BYTE *str, int size, SQLLEN *index)
+{
+    if (str == nullptr)
+    {
+        *index = SQL_NULL_DATA;
+        size = 1;
+    }
+    else
+        *index = size;
+
+    if (size > BINARY_MAX)
+        return BindParam(paramIndex, SQL_C_BINARY, SQL_LONGVARBINARY, size, (BYTE*)str, index);
+    else
+        return BindParam(paramIndex, SQL_C_BINARY, SQL_BINARY, size, (BYTE *)str, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, bool *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_TINYINT, sizeof(bool), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, float *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_FLOAT, sizeof(float), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, double *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_DOUBLE, sizeof(double), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, byte *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_TINYINT, sizeof(byte), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, short *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_SHORT, sizeof(short), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, int *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_LONG, sizeof(int), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, long long *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_SBIGINT, sizeof(LONGLONG), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, TIMESTAMP_STRUCT *value, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_TYPE_TIMESTAMP, sizeof(TIMESTAMP_STRUCT), value, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, WCHAR *str, int size, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_C_WCHAR, size, str, index);
+}
+
+bool DbConnection::BindCol(int columnIndex, BYTE *str, int size, SQLLEN *index)
+{
+    return BindCol(columnIndex, SQL_BINARY, size, str, index);
+}
+
 bool DbConnection::BindParam(SQLUSMALLINT paramIndex, SQLSMALLINT cType, SQLSMALLINT sqlType, SQLULEN len,
                              SQLPOINTER ptr, SQLLEN *index)
 {
