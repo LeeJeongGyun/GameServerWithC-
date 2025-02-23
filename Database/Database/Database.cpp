@@ -2,6 +2,7 @@
 #include <iostream>
 #include<vector>
 #include "DbConnectionPool.h"
+#include "DBBind.h"
 using namespace std;
 
 int main()
@@ -33,64 +34,95 @@ int main()
         {
             DbConnection *dbConn = connectionPool.Pop();
 
-            // 기존에 바인딩된 게 있다면 삭제
-            dbConn->UnBind();
+            const WCHAR *query = L"INSERT INTO [dbo].[Gold](Gold, Name, CreateDate) VALUES(?, ?, ?)";
+            DBBind<3, 0> dbBind(*dbConn, query);
 
             int gold = 100;
-            SQLLEN len = 0;
+            dbBind.BindParam(0, gold);
 
             WCHAR name[128] = L"정균리";
-            SQLLEN nameLen = 0;
+            dbBind.BindParam(1, name);
 
-            TIMESTAMP_STRUCT ts = {};
-            ts.year = 2025;
-            ts.month = 3;
-            ts.day = 2;
-            SQLLEN tsLen = 0;
+            TIMESTAMP_STRUCT ts = {2025, 3, 17};
+            dbBind.BindParam(2, ts);
+
+            dbBind.Execute();
+
+            //// 기존에 바인딩된 게 있다면 삭제
+            //dbConn->UnBind();
+
+            //int gold = 100;
+            //SQLLEN len = 0;
+
+            //WCHAR name[128] = L"정균리";
+            //SQLLEN nameLen = 0;
+
+            //TIMESTAMP_STRUCT ts = {};
+            //ts.year = 2025;
+            //ts.month = 3;
+            //ts.day = 2;
+            //SQLLEN tsLen = 0;
 
 
-            // 넘길 인자 바인딩
-            dbConn->BindParam(1, &gold, &len);
-            dbConn->BindParam(2, name, &nameLen);
-            dbConn->BindParam(3, &ts, &tsLen);
+            //// 넘길 인자 바인딩
+            //dbConn->BindParam(1, &gold, &len);
+            //dbConn->BindParam(2, name, &nameLen);
+            //dbConn->BindParam(3, &ts, &tsLen);
 
-            dbConn->Execute(L"INSERT INTO [dbo].[Gold](Gold, Name, CreateDate) VALUES(?, ?, ?)");
-            connectionPool.Push(dbConn);
+            //dbConn->Execute(L"INSERT INTO [dbo].[Gold](Gold, Name, CreateDate) VALUES(?, ?, ?)");
+
+             connectionPool.Push(dbConn);
         }
     }
 
     // Read
     {
         DbConnection *dbConn = connectionPool.Pop();
-        
-        // 기존에 바인딩된 게 있다면 삭제
-        dbConn->UnBind();
-
+        DBBind<1, 4> dbBind(*dbConn, L"SELECT Id, Gold, Name, CreateDate FROM [dbo].[Gold] Where Gold = (?)");
+       
         int gold = 100;
-        SQLLEN len = 0;
-        // 넘길 인자 바인딩
-        dbConn->BindParam(1, &gold, &len);
+        dbBind.BindParam(0, gold);
 
-        int outId;
-        SQLLEN outLen;
-        dbConn->BindCol(1, &outId, &outLen);
+        int outId, outGold;
+        dbBind.BindCol(0, outId);
+        dbBind.BindCol(1, outGold);
 
-        int outGold;
-        SQLLEN outGoldLen;
-        dbConn->BindCol(2, &outGold, &outGoldLen);
-        
         WCHAR name[128];
-        SQLLEN nameLen = 0;
-        dbConn->BindCol(3, name, 128, &nameLen);
+        dbBind.BindCol(2, name, 128);
 
         TIMESTAMP_STRUCT outDate;
-        SQLLEN dateLen = 0;
-        dbConn->BindCol(4, &outDate, &dateLen);
+        dbBind.BindCol(3, outDate);
+
+        dbBind.Execute();
+
+        //// 기존에 바인딩된 게 있다면 삭제
+        //dbConn->UnBind();
+
+        //int gold = 100;
+        //SQLLEN len = 0;
+        //// 넘길 인자 바인딩
+        //dbConn->BindParam(1, &gold, &len);
+
+        //int outId;
+        //SQLLEN outLen;
+        //dbConn->BindCol(1, &outId, &outLen);
+
+        //int outGold;
+        //SQLLEN outGoldLen;
+        //dbConn->BindCol(2, &outGold, &outGoldLen);
+        //
+        //WCHAR name[128];
+        //SQLLEN nameLen = 0;
+        //dbConn->BindCol(3, name, 128, &nameLen);
+
+        //TIMESTAMP_STRUCT outDate;
+        //SQLLEN dateLen = 0;
+        //dbConn->BindCol(4, &outDate, &dateLen);
 
         std::wcout.imbue(std::locale("kor"));
 
-        dbConn->Execute(L"SELECT Id, Gold, Name, CreateDate FROM [dbo].[Gold] Where Gold = (?)");
-        while (dbConn->Fetch())
+        //dbConn->Execute(L"SELECT Id, Gold, Name, CreateDate FROM [dbo].[Gold] Where Gold = (?)");
+        while (dbBind.Fetch())
         {
             wcout << "Id: " << outId << ", Gold: " << outGold << ", Name: " << name << endl;
             wcout << "Year: " << outDate.year << "/ Month: " << outDate.month << "/ Day: " << outDate.day << endl;

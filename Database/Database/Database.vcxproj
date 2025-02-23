@@ -132,6 +132,7 @@
     <ClCompile Include="DbConnectionPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DBBind.h" />
     <ClInclude Include="DbConnection.h" />
     <ClInclude Include="DbConnectionPool.h" />
   </ItemGroup>

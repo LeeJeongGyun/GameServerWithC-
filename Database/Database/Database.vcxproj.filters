@@ -31,5 +31,8 @@
     <ClInclude Include="DbConnectionPool.h">
       <Filter>Source Files\DB</Filter>
     </ClInclude>
+    <ClInclude Include="DBBind.h">
+      <Filter>Source Files\DB</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
