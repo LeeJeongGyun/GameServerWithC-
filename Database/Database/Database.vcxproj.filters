@@ -12,6 +12,15 @@
     <Filter Include="Source Files\DB">
       <UniqueIdentifier>{d688172a-4073-41e8-bf52-9a5a8088d32e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ContentDB">
+      <UniqueIdentifier>{979e6df0-81e5-417d-a9ec-052d2a0545f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{4c58b70e-3b02-41a2-be30-9e2da705e72c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\XML">
+      <UniqueIdentifier>{bb69ff4f-7802-4897-9a5d-827cfa2c74c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Database.cpp">
@@ -22,6 +31,12 @@
     </ClCompile>
     <ClCompile Include="DbConnectionPool.cpp">
       <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtils.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLParser.cpp">
+      <Filter>Source Files\XML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,5 +49,28 @@
     <ClInclude Include="DBBind.h">
       <Filter>Source Files\DB</Filter>
     </ClInclude>
+    <ClInclude Include="FileUtils.h">
+      <Filter>Source Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLParser.h">
+      <Filter>Source Files\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml.hpp">
+      <Filter>Source Files\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_iterators.hpp">
+      <Filter>Source Files\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_print.hpp">
+      <Filter>Source Files\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_utils.hpp">
+      <Filter>Source Files\XML</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="GameDB.xml">
+      <Filter>Source Files\ContentDB</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
