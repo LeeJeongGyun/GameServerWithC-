@@ -2,8 +2,12 @@
 #include "Lock.h"
 #include "CoreTLS.h"
 
-void Lock::WriteLock()
+void Lock::WriteLock(const char *name)
 {
+#if _DEBUG
+    GDeadLockProfiler->PushLock(name);
+#endif
+
     uint32 curThreadId = (_lockFlag & WRITE_THREAD_MASK) >> 16;
     if (curThreadId == LThreadId)
     {
@@ -32,8 +36,12 @@ void Lock::WriteLock()
     }
 }
 
-void Lock::WriteUnlock()
+void Lock::WriteUnlock(const char *name)
 {
+#if _DEBUG
+    GDeadLockProfiler->PopLock(name);
+#endif
+
     uint32 curThreadId = (_lockFlag & WRITE_THREAD_MASK) >> 16;
     if (curThreadId != LThreadId)
         CRASH("INVALID WRITE UNLOCK");
@@ -48,8 +56,12 @@ void Lock::WriteUnlock()
     _lockFlag = EMPTY_FLAG;
 }
 
-void Lock::ReadLock()
+void Lock::ReadLock(const char *name)
 {
+#if _DEBUG
+    GDeadLockProfiler->PushLock(name);
+#endif
+
     uint32 curThreadId = (_lockFlag & WRITE_THREAD_MASK) >> 16;
     if (curThreadId == LThreadId)
     {
@@ -74,8 +86,12 @@ void Lock::ReadLock()
     }
 }
 
-void Lock::ReadUnlock()
+void Lock::ReadUnlock(const char *name)
 {
+#if _DEBUG
+    GDeadLockProfiler->PopLock(name);
+#endif
+
     if (0 == (_lockFlag.fetch_sub(1) & READ_COUNT_MASK))
         CRASH("INVALID READ UNLOCK");
 }

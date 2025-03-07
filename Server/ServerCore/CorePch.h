@@ -12,6 +12,10 @@
 #include<map>
 #include<unordered_set>
 #include<unordered_map>
+
+#include<Windows.h>
 #include<iostream>
 
 #include "ThreadManager.h"
+#include "DeadLockProfiler.h"
+#include "Lock.h"
