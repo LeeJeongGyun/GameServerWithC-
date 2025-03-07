@@ -15,10 +15,22 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="TestManager1.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TestManager2.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TestManager1.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="TestManager2.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
