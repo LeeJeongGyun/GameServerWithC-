@@ -19,3 +19,4 @@
 #include "ThreadManager.h"
 #include "DeadLockProfiler.h"
 #include "Lock.h"
+#include "Memory.h"

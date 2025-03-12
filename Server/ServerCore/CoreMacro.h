@@ -1,4 +1,5 @@
 #pragma once
+#include "Allocator.h"
 
 #define OUT
 
@@ -29,3 +30,6 @@
     }                                   \
 }
 
+// Memory Allocation
+#define XAlloc(size)    BaseAllocator::Alloc(size)
+#define XFree(ptr)      BaseAllocator::Free(ptr)
