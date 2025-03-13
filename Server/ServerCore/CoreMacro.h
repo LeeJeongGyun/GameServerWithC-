@@ -31,5 +31,10 @@
 }
 
 // Memory Allocation
-#define XAlloc(size)    BaseAllocator::Alloc(size)
-#define XFree(ptr)      BaseAllocator::Free(ptr)
+#if _DEBUG
+    #define XAlloc(size)    StompAllocator::Alloc(size)
+    #define XFree(ptr)      StompAllocator::Free(ptr)
+#else
+    #define XAlloc(size)    BaseAllocator::Alloc(size)
+    #define XFree(ptr)      BaseAllocator::Free(ptr)
+#endif
